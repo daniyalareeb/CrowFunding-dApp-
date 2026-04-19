@@ -42,7 +42,11 @@ contract CrowdFunding {
         address indexed owner,
         uint256 amount
     );
-
+    event RefundClaimed(
+        uint256 indexed campaignId,
+        address indexed donator,
+        uint256 amount
+    );
 
     modifier onlyOwner(uint256 _id) {
         require(
@@ -96,6 +100,33 @@ contract CrowdFunding {
         emit DonateReceived(_id, msg.sender, msg.value);
     }
 
+    function claimRefund(uint256 _id) public {
+        Campaign storage campaign = campaigns[_id];
+        require(
+            block.timestamp > campaign.deadline,
+            "Campaign is still active."
+        );
+        require(
+            campaign.collectedAmount < campaign.target,
+            "Campaign goal was met; no refund available."
+        );
+
+        uint256 refundAmount = 0;
+        Donation[] storage donations = campaign.donations;
+
+        for (uint256 i = 0; i < donations.length; i++) {
+            if (donations[i].donator == msg.sender) {
+                refundAmount += donations[i].amount;
+                donations[i].amount = 0; // Zero out to prevent double-claim
+            }
+        }
+
+        require(refundAmount > 0, "No refundable donations found.");
+
+        payable(msg.sender).transfer(refundAmount);
+
+        emit RefundClaimed(_id, msg.sender, refundAmount);
+    }
 
     function withdraw(uint256 _id, uint256 _amount) public onlyOwner(_id) {
         Campaign storage campaign = campaigns[_id];
