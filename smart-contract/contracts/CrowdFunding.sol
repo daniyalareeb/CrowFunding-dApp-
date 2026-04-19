@@ -87,6 +87,8 @@ contract CrowdFunding {
     function donate(uint256 _id) public payable {
         Campaign storage campaign = campaigns[_id];
 
+        require(block.timestamp < campaign.deadline, "Campaign has ended");
+
         campaign.donations.push(Donation(msg.sender, msg.value));
         campaign.collectedAmount += msg.value;
         totalCollected += msg.value;
