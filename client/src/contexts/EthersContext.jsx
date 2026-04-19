@@ -18,7 +18,7 @@ export const EthersProvider = ({ children }) => {
 
   useEffect(() => {
     const initEthers = async () => {
-      const provider = new ethers.BrowserProvider(
+      const provider = new ethers.JsonRpcProvider(
         process.env.NEXT_PUBLIC_PROVIDER_URL
       );
       const contractInstance = new ethers.Contract(
