@@ -17,6 +17,7 @@ contract CrowdFunding {
         string title;
         string description;
         string imageUrl;
+        string category;
         uint256 target;
         uint256 collectedAmount;
         uint256 withdrawedAmount;
@@ -27,7 +28,8 @@ contract CrowdFunding {
     event CampaignCreated(
         address indexed owner,
         uint256 indexed campaignId,
-        string title
+        string title,
+        string category
     );
     event CampaignClosed(uint256 indexed campaignId);
     event DonateReceived(
@@ -54,6 +56,7 @@ contract CrowdFunding {
         string memory _title,
         string memory _description,
         string memory _imageUrl,
+        string memory _category,
         uint256 _target,
         uint256 _deadline
     ) public returns (uint256) {
@@ -65,11 +68,12 @@ contract CrowdFunding {
         newCampaign.title = _title;
         newCampaign.description = _description;
         newCampaign.imageUrl = _imageUrl;
+        newCampaign.category = _category;
         newCampaign.deadline = _deadline;
         newCampaign.target = _target;
 
         campaignCount++;
-        emit CampaignCreated(msg.sender, campaignCount - 1, _title);
+        emit CampaignCreated(msg.sender, campaignCount - 1, _title, _category);
 
         return campaignCount - 1;
     }
