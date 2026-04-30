@@ -1,4 +1,3 @@
-https://github.com/ahmedsemih/CrowdFunding-dApp/assets/102798814/165084d2-f40c-4bd2-bb54-fcaae466540f
 
 # CrowdFunding dApp
 
